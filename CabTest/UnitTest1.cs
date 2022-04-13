@@ -8,10 +8,12 @@ namespace CabTest
     public class Tests
     {
         InvoiceGenerator newInvoice;
+        rideRepository rideRecords;
         [SetUp]
         public void Setup()
         {
             newInvoice = new InvoiceGenerator();
+            rideRecords = new rideRepository();
         }
         /// <summary>
         /// UC1 When given proper distance and time should return calculated fare
@@ -77,6 +79,39 @@ namespace CabTest
             Assert.AreEqual(43.0d, newInvoice.TotalFare_for_MultipileRides(rides));
             Assert.AreEqual(21.5d, newInvoice.averagePerRide);
             Assert.AreEqual(2, newInvoice.rideCount);
+        }
+        /// <summary>
+        /// TC 4.1 Given valid UserId generate invoice
+        /// </summary>
+        [Test]
+        public void Given_ValidUserID_GenerateInvoice()
+        {
+            Ride rideOne = new Ride(2, 1);
+            Ride rideTwo = new Ride(2, 2);
+
+            rideRecords.AddUserRideRecord("Xyz", rideOne);
+            rideRecords.AddUserRideRecord("Xyz", rideTwo);
+
+            Assert.AreEqual(43.0d, newInvoice.TotalFare_for_MultipileRides(
+                rideRecords.ReturnUserRecord("Xyz")));
+            Assert.AreEqual(21.5d, newInvoice.averagePerRide);
+            Assert.AreEqual(2, newInvoice.rideCount);
+        }
+        /// <summary>
+        /// Given invalid userID throw exception
+        /// </summary>
+        [Test]
+        public void Given_InvalidUserID_ThrowException()
+        {
+            Ride rideOne = new Ride(2, 1);
+            Ride rideTwo = new Ride(2, 2);
+
+            rideRecords.AddUserRideRecord("Xyz", rideOne);
+            rideRecords.AddUserRideRecord("Xyz", rideTwo);
+
+            CustomCabExceptions exception = Assert.Throws<CustomCabExceptions>(() =>
+            newInvoice.TotalFare_for_MultipileRides(rideRecords.ReturnUserRecord("Pqr")));
+            Assert.AreEqual(exception.type, CustomCabExceptions.ExceptionType.INVALID_USER_ID);
         }
     }
 }
