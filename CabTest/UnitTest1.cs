@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Cab_Invoice_Generator;
+using System.Collections.Generic;
 
 namespace CabTest
 {
@@ -13,7 +14,7 @@ namespace CabTest
             newInvoice = new InvoiceGenerator();
         }
         /// <summary>
-        /// 
+        /// UC1 When given proper distance and time should return calculated fare
         /// </summary>
         /// <param name="distance"></param>
         /// <param name="time"></param>
@@ -28,7 +29,7 @@ namespace CabTest
             Assert.AreEqual(expected, newInvoice.TotalFare_for_SingleRide(ride));
         }
         /// <summary>
-        /// 
+        /// TC 1.1 When given improper distance(negative) should throw respective exception
         /// </summary>
         /// <param name="distance"></param>
         /// <param name="time"></param>
@@ -44,7 +45,7 @@ namespace CabTest
             Assert.AreEqual(exception.type, CustomCabExceptions.ExceptionType.INVALID_DISTANCE);
         }
         /// <summary>
-        /// 
+        /// TC 1.2 When given improper time(negative) should throw respective exception
         /// </summary>
         /// <param name="distance"></param>
         /// <param name="time"></param>
@@ -58,6 +59,24 @@ namespace CabTest
             CustomCabExceptions exception = Assert.Throws<CustomCabExceptions>(() =>
             newInvoice.TotalFare_for_SingleRide(ride));
             Assert.AreEqual(exception.type, CustomCabExceptions.ExceptionType.INVALID_TIME);
+        }
+        /// <summary>
+        /// UC2 When given list of rides should return total fare for multiple rides
+        /// UC3 For multiple rides check for average fare and number of rides
+        /// </summary>
+        [Test]
+        public void GivenA_ListOfRides_Calculates_TotalFare_NumberOfRides_and_AverageFare()
+        {
+            Ride rideOne = new Ride(2, 1);
+            Ride rideTwo = new Ride(2, 2);
+            List<Ride> rides = new List<Ride>();
+
+            rides.Add(rideOne);
+            rides.Add(rideTwo);
+
+            Assert.AreEqual(43.0d, newInvoice.TotalFare_for_MultipileRides(rides));
+            Assert.AreEqual(21.5d, newInvoice.averagePerRide);
+            Assert.AreEqual(2, newInvoice.rideCount);
         }
     }
 }
