@@ -8,17 +8,15 @@ namespace Cab_Invoice_Generator
 {
     public class InvoiceGenerator
     {
-        readonly int pricePerKM;
-        readonly int pricePerMinute;
-        readonly int minimumFare;
-        public double totalFare;
+        private int pricePerKM, pricePerMinute, minimumFare;
+        public double totalFare, averagePerRide;
         public int rideCount;
-        public double averagePerRide;
+
         public InvoiceGenerator()
         {
-            this.pricePerKM = 10;
-            this.pricePerMinute = 1;
-            this.minimumFare = 5;
+            this.pricePerKM = 10;       //15 for premium
+            this.pricePerMinute = 1;    //2
+            this.minimumFare = 5;       //20
         }
         public double TotalFare_for_SingleRide(Ride ride)
         {
@@ -36,6 +34,17 @@ namespace Cab_Invoice_Generator
                 rideCount++;
             }
             averagePerRide = totalFare / (double)rideCount;
+            return totalFare;
+        }
+        public double TotalFare_for_SinglePremiumRide(Ride ride)
+        {
+            pricePerKM = 15;
+            pricePerMinute = 2;
+            minimumFare = 20;
+            double totalFare = TotalFare_for_SingleRide(ride);
+            pricePerKM = 10;
+            pricePerMinute = 1;
+            minimumFare = 5;
             return totalFare;
         }
     }

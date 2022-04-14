@@ -113,5 +113,20 @@ namespace CabTest
             newInvoice.TotalFare_for_MultipileRides(rideRecords.ReturnUserRecord("Pqr")));
             Assert.AreEqual(exception.type, CustomCabExceptions.ExceptionType.INVALID_USER_ID);
         }
+        /// <summary>
+        /// UC5 When given proper distance and time should return calculated fare for premium ride
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <param name="time"></param>
+        /// <param name="expected"></param>
+        [TestCase(5, 3, 81)]
+        [TestCase(5.4, 3.3, 87.6d)]
+        [TestCase(0.4, 0.3, 20)]
+        [TestCase(8.451, 3.47, 133.705)]
+        public void GivenProper_TimeAndDistance_CalculatePremiumFare(double distance, double time, double expected)
+        {
+            Ride ride = new(distance, time);
+            Assert.AreEqual(expected, newInvoice.TotalFare_for_SinglePremiumRide(ride));
+        }
     }
 }
